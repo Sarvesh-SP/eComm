@@ -1,15 +1,24 @@
 const express = require("express");
-
-const port = process.env.PORT || 3000;
+const mongoose = require("mongoose");
+const userRouter = require("./routes/user");
 require("dotenv").config();
 
-//import routes
-const userRoutes = require("./routes/user");
+const port = process.env.PORT || 3000;
 
+//app
 const app = express();
 
-// routes middleware
-app.use(userRoutes);
+//DB connect
+mongoose
+  .connect(process.env.DATABASE, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("DB Connected"));
+
+//Routes
+app.use("/", userRouter);
 
 app.listen(port, () => {
   console.log(`Listening at port ${port}`);
