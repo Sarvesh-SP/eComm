@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 //Routes middleware
-app.use("/", userRouter);
+app.use("/api", userRouter);
 
 app.listen(port, () => {
   console.log(`Listening at port ${port}`);
