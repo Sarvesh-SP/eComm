@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const crypto = require("crypto");
-const uuidv1 = require("uuid/v1");
+const { v1: uuidv1 } = require("uuid");
 /* 
 role - Admin/user
 history - User orders history
@@ -45,10 +45,10 @@ const userSchema = new mongoose.Schema(
 //virtual fields
 userSchema
   .virtual("password")
-  .set((password) => {
+  .set(function (password) {
     this._password = password;
     this.salt = uuidv1();
-    this.hashed_password = this.encry(password);
+    this.hashed_password = this.encryptPassword(password);
   })
   .get((_) => {
     return this._password;
@@ -56,7 +56,7 @@ userSchema
 
 //schema methods
 userSchema.methods = {
-  encry: (password) => {
+  encryptPassword: function (password) {
     if (!password) return "";
     try {
       return crypto
