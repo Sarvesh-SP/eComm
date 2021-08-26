@@ -1,17 +1,24 @@
 const User = require("../models/user");
-const { errorHandler } = require("../helpers/dbErrorHandler");
+const bcrypt = require("bcrypt");
 
-exports.signup = (req, res) => {
+exports.signup = async (req, res) => {
   // console.log("req.body", req.body);
-  const user = new User(req.body);
+  const { name, email, password, about } = req.body;
+
+  const hash = await bcrypt.hash(password, 10);
+
+  const user = await new User({
+    name: name,
+    email: email,
+    hash_password: hash,
+  });
+
   user.save((err, user) => {
     if (err) {
       return res.status(400).json({
-        err: errorHandler(err),
+        err: "Something went wrong while adding your data",
       });
     }
-    user.salt = undefined;
-    user.hashed_password = undefined;
     res.json({
       user,
     });
