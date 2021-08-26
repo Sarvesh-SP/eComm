@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const bcrypt = require("bcrypt");
 /* 
 role - Admin/user
 
@@ -38,4 +38,14 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+userSchema.methods = {
+  authenticate: async (password, hash) => {
+    try {
+      const compare = await bcrypt.compare(password, hash);
+      return compare;
+    } catch (err) {
+      return { err: "Error during hash_password check" };
+    }
+  },
+};
 module.exports = mongoose.model("User", userSchema);
