@@ -1,6 +1,5 @@
 const { check, validationResult } = require("express-validator");
 const User = require("../../models/user");
-const expressJwt = require("express-jwt");
 
 exports.userValidator = (req, res, next) => {
   const errors = validationResult(req);
@@ -48,10 +47,3 @@ exports.emailCheck = [
     });
   }),
 ];
-
-//Auth middleware
-exports.checkSignin = expressJwt({
-  secret: process.env.TOKEN,
-  algorithms: ["HS256"],
-  userProperty: "auth",
-});
