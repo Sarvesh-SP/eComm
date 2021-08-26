@@ -1,10 +1,7 @@
 const express = require("express");
-const mongoose = require("mongoose");
+const connectDB = require("./config/db");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
-
-//env
-require("dotenv").config();
 
 const port = process.env.PORT || 3000;
 
@@ -14,14 +11,8 @@ const userRouter = require("./routes/user");
 //app
 const app = express();
 
-//DB connect
-mongoose
-  .connect(process.env.DATABASE, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("DB Connected"));
+//Mongo Connect
+connectDB();
 
 //middlewares
 app.use(morgan("dev"));
