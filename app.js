@@ -1,3 +1,5 @@
+//env
+require("dotenv").config();
 const express = require("express");
 const connectDB = require("./config/db");
 const morgan = require("morgan");
@@ -6,7 +8,7 @@ const cookieParser = require("cookie-parser");
 const port = process.env.PORT || 3000;
 
 //import Routes
-const userRouter = require("./routes/user");
+const authRoutes = require("./routes/auth");
 
 //app
 const app = express();
@@ -21,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 //Routes middleware
-app.use("/api", userRouter);
+app.use("/api", authRoutes);
 
 app.listen(port, () => {
   console.log(`Listening at port ${port}`);
