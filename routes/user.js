@@ -3,7 +3,6 @@ const router = express.Router();
 
 //controller
 const { signup } = require("../controllers/user");
-
 //express-validator
 const { userSignupValidator, customErrors } = require("../validator");
 
