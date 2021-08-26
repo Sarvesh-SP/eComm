@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const expressJwt = require("express-jwt");
 //Signup Route
 exports.signup = async (req, res) => {
   // console.log("req.body", req.body);
@@ -35,7 +35,10 @@ exports.login = async (req, res) => {
 
   const desc = await user.authenticate(password, user.hash_password);
   if (user && desc) {
-    const token = jwt.sign({ id: user._id }, process.env.TOKEN);
+    const token = jwt.sign(
+      { _id: user._id, role: user.role },
+      process.env.TOKEN
+    );
     res.cookie("token", token, { expire: new Date() + 9999 });
 
     const { _id, name, email, role } = user;
@@ -51,4 +54,31 @@ exports.login = async (req, res) => {
 exports.logout = (req, res) => {
   res.clearCookie("token");
   res.json({ message: "Logout Successful" });
+};
+
+//Auth middleware
+exports.checkSignin = expressJwt({
+  secret: process.env.TOKEN,
+  algorithms: ["HS256"],
+  requestProperty: "auth",
+});
+
+exports.isAuth = (req, res, next) => {
+  let user = req.profile && req.auth && req.profile._id == req.auth._id;
+  console.log(req.auth._id);
+  if (!user) {
+    return res.status(403).json({
+      error: "Access denied",
+    });
+  }
+  next();
+};
+
+exports.isAdmin = (req, res, next) => {
+  if (req.profile.role === "user") {
+    return res.status(403).json({
+      error: "Admin access denied",
+    });
+  }
+  next();
 };
