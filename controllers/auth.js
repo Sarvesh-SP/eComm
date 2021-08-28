@@ -75,10 +75,11 @@ exports.isAuth = (req, res, next) => {
 };
 
 exports.isAdmin = (req, res, next) => {
-  if (req.profile.role === "user") {
+  if (req.profile.role === "Admin") {
+    next();
+  } else {
     return res.status(403).json({
       error: "Admin access denied",
     });
   }
-  next();
 };
