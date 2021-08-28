@@ -8,8 +8,7 @@ const { userById } = require("../controllers/user");
 const { checkSignin, isAuth, isAdmin } = require("../controllers/auth");
 
 //routes
-
-router.get("/secret/:userId", checkSignin, isAuth, isAdmin, (req, res) => {
+router.get("/secret/:userId", checkSignin, isAuth, (req, res) => {
   res.json(req.profile);
 });
 
